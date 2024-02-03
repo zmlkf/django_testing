@@ -2,37 +2,54 @@ from http import HTTPStatus
 
 import pytest
 from pytest_django.asserts import assertRedirects
-from pytest_lazyfixture import lazy_fixture as lf
+from pytest_lazyfixture import lazy_fixture
 
 pytestmark = pytest.mark.django_db
+url_client_status = (
+    (lazy_fixture('detail_url'),
+     lazy_fixture('client'),
+     HTTPStatus.OK),
+    (lazy_fixture('home_url'),
+     lazy_fixture('client'),
+     HTTPStatus.OK),
+    (lazy_fixture('login_url'),
+     lazy_fixture('client'),
+     HTTPStatus.OK),
+    (lazy_fixture('logout_url'),
+     lazy_fixture('client'),
+     HTTPStatus.OK),
+    (lazy_fixture('signup_url'),
+     lazy_fixture('client'),
+     HTTPStatus.OK),
+    (lazy_fixture('delete_url'),
+     lazy_fixture('not_author_client'),
+     HTTPStatus.NOT_FOUND),
+    (lazy_fixture('edit_url'),
+     lazy_fixture('not_author_client'),
+     HTTPStatus.NOT_FOUND),
+    (lazy_fixture('delete_url'),
+     lazy_fixture('author_client'),
+     HTTPStatus.OK),
+    (lazy_fixture('edit_url'),
+     lazy_fixture('author_client'),
+     HTTPStatus.OK)
+)
 
 
 @pytest.mark.parametrize(
     'url',
     (
-        (lf('url_edit')),
-        (lf('url_delete'))
+        (lazy_fixture('edit_url')),
+        (lazy_fixture('delete_url'))
     )
 )
-def test_comment_edit_delete_redirect(client, url, redirect_login):
-    response = client.get(url)
-    assertRedirects(response, redirect_login + url)
+def test_comment_edit_delete_redirect(client, url, redirect_url):
+    assertRedirects(client.get(url), redirect_url(url))
 
 
 @pytest.mark.parametrize(
     'url, parametrized_client, status',
-    (
-        (lf('url_detail'), lf('client'), HTTPStatus.OK),
-        (lf('url_home'), lf('client'), HTTPStatus.OK),
-        (lf('url_login'), lf('client'), HTTPStatus.OK),
-        (lf('url_logout'), lf('client'), HTTPStatus.OK),
-        (lf('url_signup'), lf('client'), HTTPStatus.OK),
-        (lf('url_delete'), lf('not_author_client'), HTTPStatus.NOT_FOUND),
-        (lf('url_edit'), lf('not_author_client'), HTTPStatus.NOT_FOUND),
-        (lf('url_delete'), lf('author_client'), HTTPStatus.OK),
-        (lf('url_edit'), lf('author_client'), HTTPStatus.OK)
-    )
+    url_client_status
 )
 def test_avalible_for_different_pages(url, parametrized_client, status):
-    response = parametrized_client.get(url)
-    assert response.status_code == status
+    assert parametrized_client.get(url).status_code == status

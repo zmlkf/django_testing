@@ -2,10 +2,9 @@ from http import HTTPStatus
 
 from django.contrib.auth import get_user_model
 
-from .basecase import BaseCase
-from .constants_urls import (URL_ADD_NOTE, URL_DELETE, URL_DETAIL,
-                             URL_EDIT_NOTE, URL_HOME, URL_LOGIN, URL_LOGOUT,
-                             URL_NOTES_LIST, URL_SIGNUP, URL_SUCCESS)
+from .basecase import (BaseCase, URL_ADD_NOTE, URL_DELETE, URL_DETAIL,
+                       URL_EDIT_NOTE, URL_HOME, URL_LOGIN, URL_LOGOUT,
+                       URL_NOTES_LIST, URL_SIGNUP, URL_SUCCESS, redirect_url)
 
 User = get_user_model()
 
@@ -38,4 +37,4 @@ class TestRoutes(BaseCase):
         for url in urls:
             with self.subTest(url=url):
                 self.assertRedirects(
-                    self.client.get(url), f'{URL_LOGIN}?next={url}')
+                    self.client.get(url), redirect_url(url))

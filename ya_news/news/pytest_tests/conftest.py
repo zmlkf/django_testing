@@ -75,40 +75,42 @@ def comment_list(news, author):
 
 
 @pytest.fixture
-def url_detail(news):
+def detail_url(news):
     return reverse('news:detail', args=(news.id,))
 
 
 @pytest.fixture
-def url_home():
+def home_url():
     return reverse('news:home')
 
 
 @pytest.fixture
-def url_delete(comment):
+def delete_url(comment):
     return reverse('news:delete', args=(comment.id,))
 
 
 @pytest.fixture
-def url_edit(comment):
+def edit_url(comment):
     return reverse('news:edit', args=(comment.id,))
 
 
 @pytest.fixture
-def url_login():
+def login_url():
     return reverse('users:login')
 
 
 @pytest.fixture
-def url_signup():
+def signup_url():
     return reverse('users:signup')
 
 
 @pytest.fixture
-def url_logout():
+def logout_url():
     return reverse('users:logout')
 
 
 @pytest.fixture
-def redirect_login(url_login):
-    return f'{url_login}?next='
+def redirect_url(login_url):
+    def _redirect_url(url):
+        return f'{login_url}?next={url}'
+    return _redirect_url
