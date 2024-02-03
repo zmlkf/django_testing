@@ -110,7 +110,15 @@ def logout_url():
 
 
 @pytest.fixture
-def redirect_url(login_url):
-    def _redirect_url(url):
-        return f'{login_url}?next={url}'
-    return _redirect_url
+def redirect_detail(login_url, detail_url):
+    return f'{login_url}?next={detail_url}'
+
+
+@pytest.fixture
+def redirect_edit(login_url, edit_url):
+    return f'{login_url}?next={edit_url}'
+
+
+@pytest.fixture
+def redirect_delete(login_url, delete_url):
+    return f'{login_url}?next={delete_url}'

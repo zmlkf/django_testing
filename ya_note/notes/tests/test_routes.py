@@ -2,9 +2,12 @@ from http import HTTPStatus
 
 from django.contrib.auth import get_user_model
 
-from .basecase import (BaseCase, URL_ADD_NOTE, URL_DELETE, URL_DETAIL,
-                       URL_EDIT_NOTE, URL_HOME, URL_LOGIN, URL_LOGOUT,
-                       URL_NOTES_LIST, URL_SIGNUP, URL_SUCCESS, redirect_url)
+from .basecase import (
+    BaseCase, URL_ADD_NOTE, URL_DELETE,
+    URL_DETAIL, URL_EDIT_NOTE, URL_HOME,
+    URL_LOGIN, URL_LOGOUT, URL_NOTES_LIST,
+    URL_SIGNUP, URL_SUCCESS, redirect_url
+)
 
 User = get_user_model()
 
@@ -32,9 +35,11 @@ class TestRoutes(BaseCase):
                 self.assertEqual(user.get(url).status_code, status)
 
     def test_redirect_for_anonymous_client(self):
-        urls = (URL_ADD_NOTE, URL_NOTES_LIST, URL_SUCCESS,
-                URL_EDIT_NOTE, URL_DELETE, URL_DETAIL)
-        for url in urls:
-            with self.subTest(url=url):
-                self.assertRedirects(
-                    self.client.get(url), redirect_url(url))
+        urls = (
+            URL_ADD_NOTE, URL_NOTES_LIST, URL_SUCCESS,
+            URL_EDIT_NOTE, URL_DELETE, URL_DETAIL
+        )
+        urls_redirects = ((url, redirect_url(url)) for url in urls)
+        for url, redirect in urls_redirects:
+            with self.subTest(url=url, redirect=redirect):
+                self.assertRedirects(self.client.get(url), redirect)
