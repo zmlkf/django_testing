@@ -81,10 +81,9 @@ class TestNoteCreation(BaseCase):
         response = self.other_author_client.delete(URL_DELETE)
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(Note.objects.count(), notes_count)
-        self.assertTrue(Note.objects.filter(
-            id=self.note.id,
-            title=self.note.title,
-            text=self.note.text,
-            slug=self.note.slug,
-            author=self.note.author
-        ).exists())
+        self.assertTrue(Note.objects.filter(id=self.note.id,).exists())
+        note = Note.objects.get(id=self.note.id)
+        self.assertEqual(self.note.title, note.title)
+        self.assertEqual(self.note.text, note.text)
+        self.assertEqual(self.note.slug, note.slug)
+        self.assertEqual(self.note.author, note.author)
