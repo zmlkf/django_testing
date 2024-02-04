@@ -7,6 +7,7 @@ from notes.models import Note
 User = get_user_model()
 
 SLUG = 'slug'
+OTHER_SLUG = 'other_slug'
 
 URL_HOME = reverse('notes:home')
 URL_NOTES_LIST = reverse('notes:list')
@@ -21,7 +22,9 @@ URL_LOGOUT = reverse('users:logout')
 URL_SIGNUP = reverse('users:signup')
 
 FORM_DATA = {'title': 'Заголовок', 'text': 'Текст'}
-FORM_DATA_WITH_SLUG = {'title': 'Заголовок', 'text': 'Текст', 'slug': '_slug'}
+FORM_DATA_WITH_SLUG = {
+    'title': 'Заголовок', 'text': 'Текст', 'slug': OTHER_SLUG
+}
 
 
 def redirect_url(url):
